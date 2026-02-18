@@ -1,0 +1,164 @@
+jdbc connection
+============
+//insert.jsp
+<html>
+<body>
+<form method="post" action="insert1.jsp">
+Enter employee id:<input type="text" name="eid">
+<br>
+Enter employee name:<input type="text" name="ename">
+<br>
+Enter employee salary:<input type="text" name="sal">
+<br><br>
+<input type="submit" value="iNSERT">
+</form>
+</body>
+</html>
+
+//insert1.jsp
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<%@page import="java.sql.*,java.util.*"%>
+<%
+String eid=request.getParameter("eid");
+String ename=request.getParameter("ename");
+String sal=request.getParameter("sal");
+try
+{
+         Class.forName("com.mysql.jdbc.Driver");
+           Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/emp", "root", "");
+            Statement st=conn.createStatement();
+           int i=st.executeUpdate("insert into emp_details(eid,ename,sal)values('"+eid+"','"+ename+"','"+sal+"')");
+        out.println("Data is successfully inserted!");
+        }
+        catch(Exception e)
+        {
+        System.out.print(e);
+        e.printStackTrace();
+        }
+ %>
+
+//select.jsp
+<html>
+<body>
+
+<h1>Retrieve data from database in jsp</h1>
+<table border="1">
+<tr>
+<td>Emp ID</td>
+<td>Emp Name</td>
+<td>Salary</td>
+
+</tr>
+<%@page import="java.sql.DriverManager"%>
+<%@page import="java.sql.ResultSet"%>
+<%@page import="java.sql.Statement"%>
+<%@page import="java.sql.Connection"%>
+<%
+
+Statement statement = null;
+ResultSet resultSet = null;
+%>
+<html>
+<body>
+
+<h1>Retrieve data from database in jsp</h1>
+<table border="1">
+<tr>
+<td>Emp ID</td>
+<td>Emp Name</td>
+<td>Salary</td>
+
+</tr>
+<%
+try{
+
+     Class.forName("com.mysql.jdbc.Driver");
+ Connection con=DriverManager.getConnection("jdbc:mysql://localhost/emp","root","");  
+statement=con.createStatement();
+String sql ="select * from emp_details";
+resultSet = statement.executeQuery(sql);
+while(resultSet.next()){
+%>
+<tr>
+<td><%=resultSet.getInt("eid") %></td>
+<td><%=resultSet.getString("ename") %></td>
+<td><%=resultSet.getInt("sal") %></td>
+</tr>
+<%
+}
+con.close();
+} catch (Exception e) {
+e.printStackTrace();
+}
+%>
+</table> 
+
+</body>
+</html>
+
+//update.jsp
+<html>
+<body>
+<form method="post" action="update1.jsp">
+Enter employee id:<input type="text" name="eid">
+<br>
+Enter employee name:<input type="text" name="ename">
+<br>
+Enter employee salary:<input type="text" name="sal">
+<br><br>
+<input type="submit" value="UPDate">
+</form>
+</body>
+</html>
+//update1.jsp
+
+<%@page import="java.sql.*,java.util.*"%>
+<%
+int eid=Integer.parseInt(request.getParameter("eid"));
+String ename=request.getParameter("ename");
+int sal=Integer.parseInt(request.getParameter("sal"));
+try
+{
+         Class.forName("com.mysql.jdbc.Driver");
+           Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/emp", "root", "");
+            Statement st=conn.createStatement();
+           int i=st.executeUpdate("Update emp_details set sal="+sal+" where eid="+eid);
+        out.println("Data is successfully updated!");
+        }
+        catch(Exception e)
+        {
+        System.out.print(e);
+        e.printStackTrace();
+        }
+ %>
+
+//delete.jsp
+<html>
+<body>
+<form method="post" action="delete1.jsp">
+Enter employee id:<input type="text" name="eid">
+<br>
+<input type="submit" value="Delete">
+</form>
+</body>
+</html>
+
+//delete1.jsp
+<%@page import="java.sql.*,java.util.*"%>
+<%
+int eid=Integer.parseInt(request.getParameter("eid"));
+try
+{
+         Class.forName("com.mysql.jdbc.Driver");
+           Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/emp", "root", "");
+            Statement st=conn.createStatement();
+           int i=st.executeUpdate("Delete from emp_details where eid="+eid);
+        out.println("Data is successfully Deleted!");
+        }
+        catch(Exception e)
+        {
+        System.out.print(e);
+        e.printStackTrace();
+        }
+ %>
