@@ -1,0 +1,182 @@
+
+Crud in Java swing
+===============
+
+
+package cruinswing;
+import java.awt.*;
+import javax.swing.*;  
+import java.awt.event.*; 
+import java.sql.*;
+import java.util.*;
+import java.lang.*;
+import java.util.Vector;
+import javax.swing.table.DefaultTableModel;
+
+public class Cruinswing extends JFrame implements ActionListener   
+{  
+    JLabel l1, l2, l3, l4, l5, l6, l7, l8;  
+    JTextField tf1, tf2, tf3;  
+    JButton btn1, btn2,btn3,btn4,btn5;  
+    Cruinswing()  
+    {  
+        setVisible(true);  
+        setSize(700, 700);  
+        setLayout(null);  
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);  
+        setTitle("Personal Details Form");  
+        l1 = new JLabel("Personal Details Form:");  
+        l1.setForeground(Color.blue);  
+        l1.setFont(new Font("Serif", Font.BOLD, 20));  
+        l2 = new JLabel("ENTER ID:");  
+        l3 = new JLabel("ENTER NAME:");  
+        l4 = new JLabel(" ENTER Phone No:");
+        tf1 = new JTextField();  
+        tf2 = new JTextField();  
+        tf3 = new JTextField();
+        btn1 = new JButton("INSERT");  
+        btn2 = new JButton("DELETE"); 
+        btn3 = new JButton("UPDATE");
+        btn4 = new JButton("SELECT");
+        btn5 = new JButton("CLEAR"); 
+        btn1.addActionListener(this);  
+        btn2.addActionListener(this);  
+        btn3.addActionListener(this);  
+        btn4.addActionListener(this);
+        btn5.addActionListener(this);  
+        l1.setBounds(100, 30, 400, 30);  
+        l2.setBounds(80, 70, 200, 30);  
+        l3.setBounds(80, 110, 200, 30);
+        l4.setBounds(80, 150, 200, 30);
+        tf1.setBounds(300, 70, 200, 30);  
+        tf2.setBounds(300, 110, 200, 30);  
+        tf3.setBounds(300, 150, 200, 30); 
+        btn1.setBounds(50, 350, 100, 30);  
+        btn2.setBounds(130, 350, 100, 30);  
+        btn3.setBounds(210, 350, 100, 30);  
+        btn4.setBounds(280, 350, 100, 30);
+        btn5.setBounds(360, 350, 100, 30);
+        add(l1);  
+        add(l2);  
+        add(tf1);  
+        add(l3);  
+        add(tf2);  
+        add(l4);  
+        add(tf3);  
+        add(btn1);  
+        add(btn2);  
+        add(btn3);  
+        add(btn4);
+        add(btn5);  
+        
+    }  
+    public void actionPerformed(ActionEvent e)   
+    {  
+        
+            int x = 0;  
+            String s1 = tf1.getText();  
+            String s2 = tf2.getText(); 
+            String s3 = tf3.getText();   
+        if (e.getSource() == btn1)  
+         {                 
+         try
+         {
+                 Class.forName("com.mysql.jdbc.Driver");
+                Connection con=DriverManager.getConnection("jdbc:mysql://localhost/emp","root","");           
+          PreparedStatement ps1 = con.prepareStatement("insert into person values(?,?,?)");  
+                    ps1.setString(1, s1);  
+                    ps1.setString(2, s2);  
+                    ps1.setString(3, s3); 
+                   x  = ps1.executeUpdate(); 
+                    if (x > 0)   
+                    {  
+                        JOptionPane.showMessageDialog(btn1, "rows inserted Successfully");  
+                    }  
+                }  
+                catch (Exception ex)   
+                {  
+                    System.out.println(ex);  
+                } 
+         }
+              
+        else if(e.getSource() == btn2)  
+         {                   
+         try
+         {
+             Class.forName("com.mysql.jdbc.Driver");
+             Connection con=DriverManager.getConnection("jdbc:mysql://localhost/emp","root","");            
+          PreparedStatement ps = con.prepareStatement("update person set name=?,phone=? where id=?");  
+                    ps.setString(1, s2);  
+                    ps.setString(2, s3);  
+                    ps.setString(3, s1); 
+                    x = ps.executeUpdate(); 
+                    x++;  
+                    if (x > 0)   
+                    {  
+                        JOptionPane.showMessageDialog(btn1, "columns update  Successfully");  
+                    }  
+                }  
+                catch (Exception ex)   
+                {  
+                    System.out.println(ex);  
+                } 
+         }
+        else if(e.getSource() == btn3)  
+         {              
+         try
+         {            
+           Class.forName("com.mysql.jdbc.Driver");
+          Connection con=DriverManager.getConnection("jdbc:mysql://localhost/emp","root","");            
+          PreparedStatement ps = con.prepareStatement("delete from person where id=?");  
+                    ps.setString(1, s1);  
+                    x = ps.executeUpdate();  
+                    x++;  
+                    if (x > 0)   
+                    {  
+                        JOptionPane.showMessageDialog(btn1, "rows delete   Successfully");  
+                    }  
+                }  
+                catch (Exception ex)   
+                {  
+                    System.out.println(ex);  
+                } 
+         }
+        else if(e.getSource() == btn4)  
+         {                       
+        try
+         {     
+           Class.forName("com.mysql.jdbc.Driver");
+          Connection con=DriverManager.getConnection("jdbc:mysql://localhost/emp","root","");            
+          Statement stmt=con.createStatement();
+          String sql="Select * from person";
+        ResultSet rs=stmt.executeQuery(sql);
+        while(rs.next())
+        {
+            String id=rs.getString("id");
+            String name=rs.getString("name");
+            String phone=rs.getString("phone");
+            JOptionPane.showMessageDialog(btn4, (id+ ' '+name+' '+phone)); 
+        }
+                }  
+                catch (Exception ex)   
+                {  
+                    System.out.println(ex);  
+                } 
+         
+         }
+        
+          else  
+          {  
+            tf1.setText("");  
+            tf2.setText("");
+            tf3.setText("");  
+          }  
+    }   
+     
+        
+         
+    public static void main(String args[])  
+    {  
+        new Cruinswing();  
+    }  
+}  
